@@ -1,0 +1,45 @@
+﻿@model AdminEditViewModel
+@using Mvc6Project.Controllers
+@{
+    ViewBag.Title = "Edit User";
+}
+<form asp-controller="Admin" asp-action="SaveUser" method="post" class="form-horizontal" role="form">
+    <div class="form-group">
+        <label asp-for="UserName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="UserName" class="form-control" readonly="readonly" value="@AdminController.AdmUsrName" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Email" class="form-control" readonly="readonly" value="@AdminController.AdmUsrEmail" />
+        </div>
+    </div>
+    @{
+        UserManager<ApplicationUser> userManager = null;
+        ApplicationDbContext context = new ApplicationDbContext();
+        AdminController admnCtrl = new AdminController(userManager, context);
+        ViewBag.Roles = admnCtrl.GetUserRoles(AdminController.AdmUsrRole);
+    }
+    <div class="form-group">
+        <label asp-for="RankName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.RankName, (IEnumerable<SelectListItem>)ViewBag.Roles, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Save</button>
+        </div>
+    </div>
+</form>
+<form asp-controller="Admin" asp-action="DeleteUser" method="get" class="form-horizontal" role="form">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input asp-for="RankName" class="form-control" type="hidden" readonly="readonly" value="@AdminController.AdmUsrRole" />
+            <input asp-for="UserName" class="form-control" type="hidden" readonly="readonly" value="@AdminController.AdmUsrName" />
+            <button type="submit" class="btn btn-default">Delete User</button>
+        </div>
+    </div>
+</form>

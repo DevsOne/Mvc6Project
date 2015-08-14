@@ -1,0 +1,162 @@
+﻿@model ExternalLoginConfirmationViewModel
+@using Mvc6Project.Controllers
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>@ViewData["Title"].</h2>
+<h3>Associate your @ViewData["LoginProvider"] account.</h3>
+
+<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+    <h4>Association Form</h4>
+    <hr />
+    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+
+    <p class="text-info">
+        You've successfully authenticated with <strong>@ViewData["LoginProvider"]</strong>.
+        Please fill the form below and click the Register button to finish
+        logging in.
+    </p>
+
+    @{
+        if (AccountController.OFname != null)
+        {
+            ViewBag.OFname = AccountController.OFname;
+            <div class="form-group">
+                <label asp-for="ExtFirstName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input style="text-transform: capitalize" readonly="readonly" asp-for="ExtFirstName" class="form-control" value="@ViewBag.OFname" />
+                    <span asp-validation-for="ExtFirstName" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label asp-for="ExtFirstName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input style="text-transform: capitalize" asp-for="ExtFirstName" class="form-control" />
+                    <span asp-validation-for="ExtFirstName" class="text-danger"></span>
+                </div>
+            </div>
+        }
+    }
+
+    @{
+        if (AccountController.OLname != null)
+        {
+            ViewBag.OLname = AccountController.OLname;
+            <div class="form-group">
+                <label asp-for="ExtLastName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input style="text-transform: capitalize" readonly="readonly" asp-for="ExtLastName" class="form-control" value="@ViewBag.OLname" />
+                    <span asp-validation-for="ExtLastName" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label asp-for="ExtLastName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input style="text-transform: capitalize" asp-for="ExtLastName" class="form-control" />
+                    <span asp-validation-for="ExtLastName" class="text-danger"></span>
+                </div>
+            </div>
+        }
+    }
+
+    @{
+        if (AccountController.OFname != null &&
+                    AccountController.OLname != null)
+        {
+            ViewBag.Username = AccountController.OFname.Substring(0, 1).ToLower() + AccountController.OLname.ToLower();
+            <div class="form-group">
+                <label asp-for="ExtUsername" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="ExtUsername" class="form-control" value="@ViewBag.Username" />
+                    <span asp-validation-for="ExtUsername" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label asp-for="ExtUsername" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="ExtUsername" class="form-control" />
+                    <span asp-validation-for="ExtUsername" class="text-danger"></span>
+                </div>
+            </div>
+        }
+    }
+
+    @{
+        if (AccountController.OEmail != null &&
+            AccountController.FindEmail(AccountController.OEmail) == null)
+        {
+            ViewBag.OEmail = AccountController.OEmail;
+            <div class="form-group">
+                <label asp-for="Email" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input readonly="readonly" asp-for="Email" value="@ViewBag.OEmail" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label asp-for="Email" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+        }
+    }
+
+    @{
+        if (AccountController.OBirthday != null)
+        {
+            ViewBag.OBirthday = AccountController.OBirthday;
+            <div class="form-group">
+                <label asp-for="ExtBirthDate" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input readonly="readonly" asp-for="ExtBirthDate" class="form-control" type="date" value="@ViewBag.OBirthday" />
+                    <span asp-validation-for="ExtBirthDate" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label asp-for="ExtBirthDate" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="ExtBirthDate" class="form-control" type="date" />
+                    <span asp-validation-for="ExtBirthDate" class="text-danger"></span>
+                </div>
+            </div>
+        }
+    }
+
+    @{
+        ViewBag.ExtCountry = AccountController.GetCountries();
+    }
+    <div class="form-group">
+        <label asp-for="ExtCountry" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.ExtCountry, (IEnumerable<SelectListItem>)ViewBag.ExtCountry, new { @class = "form-control" })
+            <span asp-validation-for="ExtCountry" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Register</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

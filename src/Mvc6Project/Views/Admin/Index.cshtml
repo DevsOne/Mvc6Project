@@ -1,0 +1,11 @@
+﻿@model AdminUserViewModel
+@{
+    ViewBag.Title = "Account Control Panel";
+}
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<p class="text-error">@ViewBag.ErrorMessage</p>
+
+<div class="userview">
+    @await Html.PartialAsync("ShowUserDetails")
+</div>
